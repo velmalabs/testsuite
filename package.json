@@ -1,0 +1,20 @@
+{
+  "name": "@velmalabs/testsuite",
+  "author": "Maikel ten Voorde",
+  "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "testsuite": "src/cli.js"
+  },
+
+  "devDependencies": {
+    "@playwright/test": "^1.45.3"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./src/velma.specs.js",
+      "types": "./types/index.d.ts"
+    }
+  }
+}
