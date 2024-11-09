@@ -1,4 +1,4 @@
-import {Locator, Page} from 'playwright';
+import {Locator, Page} from '@playwright/test';
 
 declare module '@velmalabs/testsuite' {
     export let page: Page;
