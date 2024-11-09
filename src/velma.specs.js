@@ -1,5 +1,7 @@
 import {test} from '@playwright/test';
 
+export * from '@playwright/test';
+
 export let page;
 export let testInfo;
 test.beforeAll(async ({browser}, info) => {
@@ -67,4 +69,4 @@ function backtraceFilePath(step = 2) {
 }
 
 
-export {test, render};
+export {render};

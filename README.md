@@ -45,6 +45,27 @@ To use this package, you can run the following command:
   npm testsuite --browser=firefox
 ```
 
+## Writing Tests
+
+To write tests, you can create a file with the `.test.js` extension in your project.
+
+```javascript
+import {render, test, expect} from "@velmalabs/testsuite";
+
+test('button', async () => {
+    let clicked = false;
+    const screen = await render('./Button.svelte', {
+        text: 'Hello',
+        onclick: () => clicked = true
+    });
+    const button = screen.locator('button');
+    await button.click();
+    expect(clicked).toBe(true);
+});
+```
+
+
+
 ## Resources
 
 - [Playwright Documentation](https://playwright.dev/docs/intro)

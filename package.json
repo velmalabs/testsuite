@@ -2,7 +2,7 @@
   "name": "@velmalabs/testsuite",
   "description": "A test suite for testing svelte 5 components",
   "author": "Maikel ten Voorde",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "license": "MIT",
   "bin": {
