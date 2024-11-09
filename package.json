@@ -12,7 +12,10 @@
     "url": "https://github.com/velmalabs/testsuite"
   },
   "devDependencies": {
-    "@playwright/test": "^1.45.3"
+    "@playwright/test": "^1.44.1"
+  },
+  "peerDependencies": {
+    "@sveltejs/kit": "^2.8.0"
   },
   "exports": {
     "./package.json": "./package.json",
