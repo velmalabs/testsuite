@@ -1,8 +1,10 @@
 {
   "name": "@velmalabs/testsuite",
+  "description": "A test suite for testing svelte 5 components",
   "author": "Maikel ten Voorde",
   "version": "0.1.0",
   "type": "module",
+  "license": "MIT",
   "bin": {
     "testsuite": "src/cli.js"
   },
