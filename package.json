@@ -1,12 +1,14 @@
 {
   "name": "@velmalabs/testsuite",
   "author": "Maikel ten Voorde",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "bin": {
     "testsuite": "src/cli.js"
   },
-
+  "repository": {
+    "url": "https://github.com/velmalabs/testsuite"
+  },
   "devDependencies": {
     "@playwright/test": "^1.45.3"
   },
@@ -16,5 +18,8 @@
       "import": "./src/velma.specs.js",
       "types": "./types/index.d.ts"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
