@@ -26,9 +26,9 @@ function collectComponents(files) {
 
 function extractComponents(file) {
     let relativePath = dirname(file);
-    if (relativePath.startsWith('node_modules')) {
-        relativePath = relativePath.substring(13);
-    }
+    // if (relativePath.startsWith('node_modules')) {
+    //     relativePath = relativePath.substring(13);
+    // }
     const parts = readFileSync(file, 'utf-8').split('.svelte');
     return parts.map((p, i) => {
         if (!parts[i + 1]?.startsWith('"') && !parts[i + 1]?.startsWith("'")) {
@@ -46,7 +46,7 @@ function prepare(components) {
     console.log('Prepare Suite...')
     copyFileSync(import.meta.dirname + '/../../velmalabs.config.js', 'velmalabs.config.ts');
     cpSync(import.meta.dirname + '/../suite', 'src/routes/__testsuite__', {recursive: true});
-    writeFileSync('src/routes/__testsuite__/tree.ts', '// @ts-nocheck\n' + components.map((c, i) => `import C${i} from '${c}';`).join('\n') + '\n' + 'export default {\n' + components.map((c, i) => `\t"${c}":C${i}`).join(',\n') + '\n' + '};\n');
+    writeFileSync('src/routes/__testsuite__/tree.ts', components.map((c, i) => `import C${i} from '../../../${c}';`).join('\n') + '\n' + 'export default {\n' + components.map((c, i) => `\t"${c}":C${i}`).join(',\n') + '\n' + '};\n');
 }
 
 function cleanup() {
