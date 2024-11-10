@@ -1,8 +1,8 @@
 // @ts-nocheck
-
 import {browser} from "$app/environment";
 import components from "./tree";
 import {writable} from "svelte/store";
+import {createRawSnippet, mount} from "svelte";
 
 export function load() {
     let response = writable({component: null, props: {}});
@@ -31,10 +31,33 @@ function deserializeProps(props: object) {
                 return new Function('args', `return (${functionString})(...args);`)(args);
             }
         } else if (typeof value === 'object') {
-            acc[key] = deserializeProps(value);
+            if (value.type === 'snippet') {
+                acc[key] = renderSnippet(Object.values(value.components))
+            } else {
+                acc[key] = deserializeProps(value);
+            }
         } else {
             acc[key] = value;
         }
         return acc;
     }, {});
+}
+
+
+function renderSnippet(entries) {
+    return createRawSnippet(() => ({
+        render: () => `<div></div>`,
+        setup: (target) => {
+            for (const snippet of entries) {
+                const component = components[snippet.path];
+                if (!component) {
+                    throw new Error(`Component "${snippet.path}" does not exist`);
+                }
+                mount(component, {
+                    target,
+                    props: deserializeProps(snippet.props)
+                });
+            }
+        }
+    }))
 }
