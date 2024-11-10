@@ -58,6 +58,10 @@ function renderSnippet(entries) {
                     props: deserializeProps(snippet.props)
                 });
             }
+            while (target.firstChild) {
+                target.parentNode.insertBefore(target.firstChild, target);
+            }
+            target.remove();
         }
     }))
 }
