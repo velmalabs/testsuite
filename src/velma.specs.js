@@ -10,12 +10,20 @@ test.beforeAll(async ({browser}, info) => {
     await page.goto('http://localhost:4173/__testsuite__', {waitUntil: 'domcontentloaded'});
     await page.exposeFunction('sandboxFN', (evHash) => _ctx[evHash]());
     await page.waitForSelector('main', {state: 'attached'});
-})
+});
+
+test.afterEach(async () => {
+    // Take a screenshot of the rendered component
+    const homeScreenshot = await page.screenshot();
+    await testInfo.attach('Screenshot', {
+        body: homeScreenshot, contentType: 'image/png',
+    });
+});
 
 let _ctx = {};
 
 async function render(component, props) {
-    const path = locateComponent(component);
+    const path = locateComponent(component, 'render');
     const main = await page.getByTestId('main');
     await page.evaluate(async ({path, props}) => {
         if (!window.render) {
@@ -26,13 +34,15 @@ async function render(component, props) {
         window.render(path, {props});
     }, {path, props: serializeProps(props)});
 
-    // Take a screenshot of the rendered component
-    const homeScreenshot = await page.screenshot();
-    await testInfo.attach('Screenshot', {
-        body: homeScreenshot, contentType: 'image/png',
-    });
-
     return main;
+}
+
+function snippet(component, props) {
+    const components = Array.isArray(component) ? component : [{path: component, props}];
+    return {
+        type: 'snippet',
+        components: components.map(c => ({path: locateComponent(c.path, 'snippet'), props: serializeProps(c.props)}))
+    }
 }
 
 
@@ -54,19 +64,19 @@ function serializeProps(props) {
     }, {});
 }
 
-function locateComponent(component) {
-    const relativePath = backtraceFilePath(4).substring(1);
+function locateComponent(component, type) {
+    const relativePath = backtraceFilePath(type).substring(1);
     const relativeDir = relativePath.split('/').slice(0, -1).join('/');
     return (relativeDir + '/' + component).replaceAll('/./', '/');
 }
 
-function backtraceFilePath(step = 2) {
+function backtraceFilePath(type = 'render') {
     const rootPath = process.cwd();
     const stack = new Error().stack;
     const lines = stack.split('\n');
-    const line = lines[step];
-    return line.split(rootPath)[1].split(':')[0];
+    const line = lines.findIndex(l => l.includes(`at ${type} (`));
+    return lines[line+1].split(rootPath)[1].split(':')[0];
 }
 
 
-export {render};
+export {render, snippet};

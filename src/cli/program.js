@@ -29,11 +29,13 @@ function extractComponents(file) {
     if (relativePath.startsWith('node_modules')) {
         relativePath = relativePath.substring(13);
     }
-    return readFileSync(file, 'utf-8').split('render(').slice(1).map(c => {
-        if (!c.startsWith('"') && !c.startsWith("'")) {
+    const parts = readFileSync(file, 'utf-8').split('.svelte');
+    return parts.map((p, i) => {
+        if (!parts[i + 1]?.startsWith('"') && !parts[i + 1]?.startsWith("'")) {
             return false;
         }
-        return c.split(c.startsWith('"') ? '"' : "'")[1];
+        const comma = parts[i + 1].indexOf('"') > -1 ? '"' : "'";
+        return p.split(comma).slice(-1)[0] + '.svelte';
     }).filter(c => !!c).map(component => {
         return `${relativePath}/${component}`.replaceAll('/./', '/');
     });
