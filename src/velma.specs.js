@@ -1,5 +1,4 @@
 import {test} from '@playwright/test';
-import {createRawSnippet, mount} from "svelte";
 
 export * from '@playwright/test';
 
