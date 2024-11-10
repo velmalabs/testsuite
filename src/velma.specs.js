@@ -10,7 +10,15 @@ test.beforeAll(async ({browser}, info) => {
     await page.goto('http://localhost:4173/__testsuite__', {waitUntil: 'domcontentloaded'});
     await page.exposeFunction('sandboxFN', (evHash) => _ctx[evHash]());
     await page.waitForSelector('main', {state: 'attached'});
-})
+});
+
+test.afterEach(async () => {
+    // Take a screenshot of the rendered component
+    const homeScreenshot = await page.screenshot();
+    await testInfo.attach('Screenshot', {
+        body: homeScreenshot, contentType: 'image/png',
+    });
+});
 
 let _ctx = {};
 
@@ -25,12 +33,6 @@ async function render(component, props) {
         }
         window.render(path, {props});
     }, {path, props: serializeProps(props)});
-
-    // Take a screenshot of the rendered component
-    const homeScreenshot = await page.screenshot();
-    await testInfo.attach('Screenshot', {
-        body: homeScreenshot, contentType: 'image/png',
-    });
 
     return main;
 }
