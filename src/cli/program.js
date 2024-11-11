@@ -26,9 +26,6 @@ function collectComponents(files) {
 
 function extractComponents(file) {
     let relativePath = dirname(file);
-    // if (relativePath.startsWith('node_modules')) {
-    //     relativePath = relativePath.substring(13);
-    // }
     const parts = readFileSync(file, 'utf-8').split('.svelte');
     return parts.map((p, i) => {
         if (!parts[i + 1]?.startsWith('"') && !parts[i + 1]?.startsWith("'")) {
