@@ -12,7 +12,8 @@
     "url": "https://github.com/velmalabs/testsuite"
   },
   "dependencies": {
-    "@playwright/test": "^1.44.1"
+    "@playwright/test": "^1.44.1",
+    "fast-glob": "^3.3.2"
   },
   "peerDependencies": {
     "@sveltejs/kit": "^2.8.0"
