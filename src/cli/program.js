@@ -9,8 +9,11 @@ import {
 	cpSync,
 	unlinkSync,
 	rmSync,
-	existsSync
+	existsSync,
+	mkdirSync
 } from 'node:fs';
+
+const pkgRoot = import.meta.dirname + '/../../';
 
 export const program = {
 	run: async (args) => {
@@ -51,15 +54,24 @@ function extractComponents(file) {
 
 function prepare(components) {
 	console.log('Prepare Suite...');
-	copyFileSync(import.meta.dirname + '/../../velmalabs.config.js', 'velmalabs.config.ts');
+
+	copyFileSync(pkgRoot + 'velmalabs.config.js', 'velmalabs.config.ts');
 	cpSync(import.meta.dirname + '/../suite', 'src/routes/__testsuite__', { recursive: true });
+
+	if (!existsSync(pkgRoot + '.cache')) {
+		mkdirSync(pkgRoot + '.cache');
+	}
+
 	writeFileSync(
-		'src/routes/__testsuite__/dictionary.ts',
-		'export default [' + components.map(c => `"${c}"`).join(',') + ']\n'
+		pkgRoot + '.cache/dictionary.js',
+		'export default [\n' + components.map((c) => `\t"${c}"`).join(',\n') + '\n' + '];\n'
 	);
+
+	const projectRoot = process.cwd();
+
 	writeFileSync(
-		'src/routes/__testsuite__/components.ts',
-		components.map((c, i) => `import C${i} from '../../../${c}';`).join('\n') +
+		pkgRoot + '.cache/components.ts',
+		components.map((c, i) => `import C${i} from '${projectRoot}/${c}';`).join('\n') +
 			'\n' +
 			'export default {\n' +
 			components.map((c, i) => `\t"${c}":C${i}`).join(',\n') +
@@ -75,6 +87,9 @@ function cleanup() {
 	}
 	if (existsSync('src/routes/__testsuite__')) {
 		rmSync('src/routes/__testsuite__', { recursive: true });
+	}
+	if (existsSync(pkgRoot + '.cache')) {
+		rmSync(pkgRoot + '.cache', { recursive: true });
 	}
 	process.exit(0);
 }

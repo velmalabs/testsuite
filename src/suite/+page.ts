@@ -1,8 +1,8 @@
 // @ts-nocheck
 import {browser} from "$app/environment";
-import components from "./components";
 import {writable} from "svelte/store";
 import {createRawSnippet, mount} from "svelte";
+import components from "@velmalabs/testsuite/.cache/components";
 
 export function load() {
     let response = writable({component: null, props: {}});

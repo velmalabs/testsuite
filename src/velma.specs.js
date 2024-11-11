@@ -1,8 +1,7 @@
 import {test} from '@playwright/test';
 
 export * from '@playwright/test';
-
-export * as dictionary from '';
+import dictionary from '../.cache/dictionary.js';
 
 export let page;
 export let testInfo;
@@ -81,4 +80,4 @@ function backtraceFilePath(type = 'render') {
 }
 
 
-export {render, snippet};
+export {render, snippet, dictionary};
