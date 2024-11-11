@@ -8,24 +8,25 @@ export let testInfo;
 export let takeScreenshot = false;
 
 test.beforeAll(async ({ browser }, info) => {
-	page = await browser.newPage();
 	testInfo = info;
+	if (testInfo.tags.includes('@unittest')) return;
+
+	page = await browser.newPage();
 	await page.goto('http://localhost:4173/__testsuite__', { waitUntil: 'domcontentloaded' });
 	await page.exposeFunction('sandboxFN', (evHash) => _ctx[evHash]());
 	await page.waitForSelector('main', { state: 'attached' });
 });
 
-test.beforeEach(async () => {
-	takeScreenshot = false;
-});
+test.beforeEach(async () => (takeScreenshot = false));
 test.afterEach(async ({ page: _ }, testInfo) => {
-	if (takeScreenshot) {
-		const homeScreenshot = await page.screenshot();
-		await testInfo.attach('Screenshot', {
-			body: homeScreenshot,
-			contentType: 'image/png'
-		});
-	}
+	if (testInfo.tags.includes('@unittest')) return;
+	if (!takeScreenshot) return;
+
+	const homeScreenshot = await page.screenshot();
+	await testInfo.attach('Screenshot', {
+		body: homeScreenshot,
+		contentType: 'image/png'
+	});
 });
 
 let _ctx = {};
