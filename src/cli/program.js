@@ -33,7 +33,7 @@ function extractComponents(file) {
         }
         const comma = parts[i + 1].indexOf('"') > -1 ? '"' : "'";
         return p.split(comma).slice(-1)[0] + '.svelte';
-    }).filter(c => !!c).map(component => {
+    }).filter(c => !!c && c !== '.svelte').map(component => {
         return `${relativePath}/${component}`.replaceAll('/./', '/');
     });
 }
