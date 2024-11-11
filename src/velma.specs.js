@@ -2,6 +2,8 @@ import {test} from '@playwright/test';
 
 export * from '@playwright/test';
 
+export * as dictionary from '';
+
 export let page;
 export let testInfo;
 test.beforeAll(async ({browser}, info) => {

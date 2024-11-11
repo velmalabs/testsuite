@@ -1,6 +1,6 @@
 // @ts-nocheck
 import {browser} from "$app/environment";
-import components from "./tree";
+import components from "./components";
 import {writable} from "svelte/store";
 import {createRawSnippet, mount} from "svelte";
 
