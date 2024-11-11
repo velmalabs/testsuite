@@ -7,8 +7,15 @@ declare module '@velmalabs/testsuite' {
 
     export function render(path: string, props: Record<string, unknown>): Promise<Locator>;
 
-    export function snippet(path: string, props: Record<string, unknown>): SnippetConfig;
-    export function snippet(snippets: Array<{ path: string; props: Record<string, unknown> }>): SnippetConfig;
+    export function snippet(path: string, props: Record<string, unknown>): {
+        type: 'snippet',
+        components: SnippetConfig[]
+    };
+    export function snippet(snippets: Array<{ path: string; props: Record<string, unknown> }>): {
+        type: 'snippet',
+        components: SnippetConfig[]
+    };
+    export function snippet(raw: string): { type: 'raw', content: unknown; };
 
     export * from '@playwright/test';
 

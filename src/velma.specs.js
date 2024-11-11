@@ -43,6 +43,12 @@ async function render(component, props) {
 }
 
 function snippet(component, props) {
+	if (typeof component !== 'string' && !Array.isArray(component) || typeof component === 'string' && !component.includes('.svelte')) {
+		return {
+			type: 'raw',
+			content: component
+		};
+	}
 	const components = Array.isArray(component) ? component : [{ path: component, props }];
 	return {
 		type: 'snippet', components: components.map((c) => ({

@@ -34,7 +34,9 @@ function deserializeProps(props: object) {
 				return new Function('args', `return (${functionString})(...args);`)(args);
 			};
 		} else if (typeof value === 'object') {
-			if (value.type === 'snippet') {
+			if (value.type === 'raw') {
+				acc[key] = createRawSnippet(()=>({render: () => value.content}));
+			} else if (value.type === 'snippet') {
 				acc[key] = renderSnippet(Object.values(value.components));
 			} else {
 				acc[key] = deserializeProps(value);
