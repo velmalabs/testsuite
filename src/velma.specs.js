@@ -4,28 +4,23 @@ export * from '@playwright/test';
 import dictionary from '../.cache/dictionary.js';
 
 export let page;
-export let testInfo;
 export let takeScreenshot = false;
 
-test.beforeAll(async ({ browser }, info) => {
-	testInfo = info;
-	if (testInfo.tags.includes('@unittest')) return;
+test.beforeEach(async ({ browser }, info) => {
+	takeScreenshot = false;
+	if (page || info.tags.includes('@unittest')) return;
 
 	page = await browser.newPage();
 	await page.goto('http://localhost:4173/__testsuite__', { waitUntil: 'domcontentloaded' });
 	await page.exposeFunction('sandboxFN', (evHash) => _ctx[evHash]());
 	await page.waitForSelector('main', { state: 'attached' });
 });
-
-test.beforeEach(async () => (takeScreenshot = false));
-test.afterEach(async ({ page: _ }, testInfo) => {
-	if (testInfo.tags.includes('@unittest')) return;
+test.afterEach(async () => {
 	if (!takeScreenshot) return;
 
 	const homeScreenshot = await page.screenshot();
-	await testInfo.attach('Screenshot', {
-		body: homeScreenshot,
-		contentType: 'image/png'
+	await test.info().attach('Screenshot', {
+		body: homeScreenshot, contentType: 'image/png'
 	});
 });
 
@@ -35,17 +30,14 @@ async function render(component, props) {
 	takeScreenshot = true;
 	const path = locateComponent(component, 'render');
 	const main = await page.getByTestId('main');
-	await page.evaluate(
-		async ({ path, props }) => {
-			if (!window.render) {
-				await new Promise((resolve) => {
-					window.renderLoaded = () => resolve();
-				});
-			}
-			window.render(path, { props });
-		},
-		{ path, props: serializeProps(props) }
-	);
+	await page.evaluate(async ({ path, props }) => {
+		if (!window.render) {
+			await new Promise((resolve) => {
+				window.renderLoaded = () => resolve();
+			});
+		}
+		window.render(path, { props });
+	}, { path, props: serializeProps(props) });
 
 	return main;
 }
@@ -53,10 +45,8 @@ async function render(component, props) {
 function snippet(component, props) {
 	const components = Array.isArray(component) ? component : [{ path: component, props }];
 	return {
-		type: 'snippet',
-		components: components.map((c) => ({
-			path: locateComponent(c.path, 'snippet'),
-			props: serializeProps(c.props)
+		type: 'snippet', components: components.map((c) => ({
+			path: locateComponent(c.path, 'snippet'), props: serializeProps(c.props)
 		}))
 	};
 }
