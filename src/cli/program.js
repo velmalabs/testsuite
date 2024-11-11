@@ -55,7 +55,7 @@ function prepare(components) {
 	cpSync(import.meta.dirname + '/../suite', 'src/routes/__testsuite__', { recursive: true });
 	writeFileSync(
 		'src/routes/__testsuite__/dictionary.ts',
-		'export default [' + components.join(',') + ']\n'
+		'export default [' + components.map(c => `"${c}"`).join(',') + ']\n'
 	);
 	writeFileSync(
 		'src/routes/__testsuite__/components.ts',
