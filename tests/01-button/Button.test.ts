@@ -1,6 +1,6 @@
 import {render, test, expect} from "@velmalabs/testsuite";
 
-test('Button rendered correctly and click event is working as expected', async () => {
+test('Button rendered correctly and click event is working as expected', {tag: '@component'},async () => {
     let clicked = false;
     const screen = await render('./Button.svelte', {
         text: 'Click Me',

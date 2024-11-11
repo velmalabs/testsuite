@@ -1,5 +1,5 @@
 import {expect, render, snippet, test} from "@velmalabs/testsuite";
-test('List with children is rendered correctly', async () => {
+test('List with children is rendered correctly', {tag: '@component'}, async () => {
     const screen = await render('./List.svelte', {
         children: snippet([
             {path: './ListItem.svelte', props: {text: 'First Child Element'}},

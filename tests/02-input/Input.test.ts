@@ -1,5 +1,5 @@
 import {expect, render, test} from "@velmalabs/testsuite";
-test('Input is rendering correctly with text prop', async () => {
+test('Input is rendering correctly with text prop', {tag: '@component'}, async () => {
     const screen = await render('./Input.svelte', {
         text: 'Hello',
     });
